@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wholesome</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f7fafc; color: #333; transition: background 0.3s, color 0.3s; will-change: background, color; }
+        .dark-mode { background: #1a1a1a; color: #f7fafc; }
+        header { background: #4CAF50; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        header h1 { font-size: 24px; }
+        nav ul { display: flex; gap: 20px; list-style: none; }
+        nav ul li a { color: white; text-decoration: none; transition: opacity 0.2s; }
+        nav ul li a:hover { opacity: 0.8; }
+        #theme-toggle { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; transition: transform 0.2s; }
+        #theme-toggle:hover { transform: scale(1.05); }
+        .section { background: white; padding: 30px; margin: 30px auto; max-width: 700px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); transition: background 0.3s; }
+        .dark-mode .section { background: #2d2d2d; }
+        h2 { font-size: 28px; margin-bottom: 20px; text-align: center; }
+        .btn { display: inline-block; padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 20px; transition: transform 0.2s, background 0.2s; cursor: pointer; }
+        .btn:hover { background: #45a049; transform: scale(1.05); }
+        .hero { padding: 80px 20px; background: #e3f2fd; text-align: center; }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; }
+        .auth-form input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; transition: border-color 0.2s; }
+        .auth-form input:focus { border-color: #4CAF50; outline: none; }
+        .auth-toggle { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .auth-btn.active { background: #45a049; }
+        #auth-feedback { text-align: center; margin-top: 10px; color: #4CAF50; }
+        .mood-options { display: flex; gap: 15px; justify-content: center; }
+        .mood-option { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; transition: transform 0.2s; }
+        .mood-option:hover { transform: scale(1.1); }
+        #mood-feedback { margin-top: 15px; text-align: center; }
+        .objectives ul { list-style: none; }
+        .objectives ul li { padding: 15px; margin: 10px 0; background: #f7fafc; border-radius: 8px; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
+        .dark-mode .objectives ul li { background: #3d3d3d; }
+        .objectives ul li:hover { transform: translateX(5px); }
+        .progress-bar { height: 20px; background: #4CAF50; border-radius: 10px; transition: width 0.5s ease-out; }
+        .chat-box { background: #f7fafc; padding: 20px; border-radius: 8px; height: 300px; overflow-y: auto; margin-bottom: 20px; scroll-behavior: smooth; }
+        .dark-mode .chat-box { background: #3d3d3d; }
+        .chat-box p { padding: 10px; background: white; border-radius: 5px; margin: 10px 0; }
+        .dark-mode .chat-box p { background: #4CAF50; }
+        #user-input { width: 80%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; transition: border-color 0.2s; }
+        #user-input:focus { border-color: #4CAF50; outline: none; }
+        .timer-container { margin-left: auto; }
+        #timer-display { font-size: 24px; color: #4CAF50; }
+        .timer-controls button { padding: 5px 10px; margin: 0 5px; }
+        footer { background: #4CAF50; color: white; padding: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Wholesome</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Objectives</a></li>
+                <li><a href="#">Chat</a></li>
+            </ul>
+        </nav>
+        <button id="theme-toggle">Dark Mode</button>
+    </header>
+
+    <section class="hero section">
+        <h2>Welcome!</h2>
+        <p>Your mental wellness buddy.</p>
+        <a href="#auth" class="btn">Join Now</a>
+    </section>
+
+    <section class="section" id="auth">
+        <h2>Join Wholesome</h2>
+        <div class="auth-toggle">
+            <button class="btn auth-btn active" data-form="login">Login</button>
+            <button class="btn auth-btn" data-form="signup">Sign Up</button>
+        </div>
+        <form id="login-form" class="auth-form active">
+            <input type="text" placeholder="Username" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <form id="signup-form" class="auth-form">
+            <input type="text" placeholder="Username" required>
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Password" required>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+        <div id="auth-feedback"></div>
+    </section>
+
+    <section class="mood-tracker section">
+        <h2>Feeling Today?</h2>
+        <div class="mood-options">
+            <div class="mood-option" style="background: #ffdd00" data-mood="happy">😊</div>
+            <div class="mood-option" style="background: #ffaa00" data-mood="neutral">😐</div>
+            <div class="mood-option" style="background: #ff6666" data-mood="sad">😔</div>
+        </div>
+        <div id="mood-feedback"></div>
+    </section>
+
+    <section class="objectives section">
+        <h2>Daily Objectives</h2>
+        <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+        <ul>
+            <li><input type="checkbox" class="objective-check"> Talk with someone</li>
+            <li>
+                <input type="checkbox" class="objective-check"> Meditate 5 mins
+                <div class="timer-container">
+                    <div id="timer-display">05:00</div>
+                    <div class="timer-controls">
+                        <button id="start-timer" class="btn">Start</button>
+                        <button id="reset-timer" class="btn">Reset</button>
+                    </div>
+                </div>
+            </li>
+            <li><input type="checkbox" class="objective-check"> 10-min walk</li>
+            <li><input type="checkbox" class="objective-check"> Sweet treat</li>
+        </ul>
+    </section>
+
+    <section class="chat section">
+        <h2>Chat</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type here...">
+        <button class="btn" id="send-btn">Send</button>
+    </section>
+
+    <footer>
+        <p>© 2025 Wholesome</p>
+    </footer>
+
+    <script>
+        const elements = {
+            themeToggle: document.getElementById("theme-toggle"),
+            authBtns: document.querySelectorAll('.auth-btn'),
+            loginForm: document.getElementById('login-form'),
+            signupForm: document.getElementById('signup-form'),
+            moodOptions: document.querySelectorAll('.mood-option'),
+            progressBar: document.getElementById('progress-bar'),
+            checks: document.querySelectorAll('.objective-check'),
+            timerDisplay: document.getElementById('timer-display'),
+            startTimerBtn: document.getElementById('start-timer'),
+            resetTimerBtn: document.getElementById('reset-timer'),
+            chatBox: document.getElementById("chat-box"),
+            userInput: document.getElementById("user-input"),
+            sendBtn: document.getElementById("send-btn")
+        };
+
+        // Dark Mode
+        elements.themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            requestAnimationFrame(() => {});
+        });
+
+        // Auth Toggle
+        elements.authBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                elements.authBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                elements.loginForm.classList.toggle('active', btn.dataset.form === 'login');
+                elements.signupForm.classList.toggle('active', btn.dataset.form === 'signup');
+            });
+        });
+        elements.loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('auth-feedback').textContent = 'Logged in!';
+        });
+        elements.signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            document.getElementById('auth-feedback').textContent = 'Signed up!';
+        });
+
+        // Mood Tracker
+        elements.moodOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const mood = option.dataset.mood;
+                document.getElementById('mood-feedback').textContent = mood === 'happy' ? 'Yay, you’re happy!' : mood === 'neutral' ? 'Let’s make it better!' : 'Here for you!';
+            });
+        });
+
+        // Objectives & Timer
+        let completed = 0;
+        elements.checks.forEach(check => {
+            check.addEventListener('change', () => {
+                completed = check.checked ? completed + 1 : completed - 1;
+                elements.progressBar.style.width = ${(completed / 4) * 100}%;
+            });
+        });
+
+        let timeLeft = 300;
+        let timerInterval = null;
+        function updateTimer() {
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            elements.timerDisplay.textContent = ${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')};
+        }
+
+        elements.startTimerBtn.addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimer();
+                    } else {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        elements.timerDisplay.textContent = "Done!";
+                        elements.startTimerBtn.textContent = "Start";
+                    }
+                }, 1000);
+                elements.startTimerBtn.textContent = "Pause";
+            } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                elements.startTimerBtn.textContent = "Start";
+            }
+        });
+
+        elements.resetTimerBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 300;
+            updateTimer();
+            elements.startTimerBtn.textContent = "Start";
+        });
+        updateTimer();
+
+        // Chat
+        elements.sendBtn.addEventListener("click", sendMessage);
+        elements.userInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") sendMessage();
+        });
+
+        function sendMessage() {
+            const msg = elements.userInput.value.trim();
+            if (msg) {
+                elements.chatBox.insertAdjacentHTML('beforeend', <p>You: ${msg}</p>);
+                setTimeout(() => {
+                    const reply = msg.toLowerCase().includes("hi") ? "Hey, bro!" :
+                                  msg.toLowerCase().includes("sad") ? "What’s up? Talk to me!" :
+                                  msg.toLowerCase().includes("joke") ? "Why don’t eggs tell jokes? They’d crack up!" : "Cool, what’s next?";
+                    elements.chatBox.insertAdjacentHTML('beforeend', <p>Wholesome: ${reply}</p>);
+                    elements.chatBox.scrollTop = elements.chatBox.scrollHeight;
+                }, 500);
+                elements.userInput.value = "";
+                elements.chatBox.scrollTop = elements.chatBox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
